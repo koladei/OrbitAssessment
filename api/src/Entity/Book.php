@@ -17,6 +17,7 @@ use ApiPlatform\Metadata\Post;
 use ApiPlatform\Metadata\Put;
 use ApiPlatform\Metadata\UrlGeneratorInterface;
 use App\Enum\BookCondition;
+use App\Enum\BookPublishingStatus;
 use App\Repository\BookRepository;
 use App\State\Processor\BookPersistProcessor;
 use App\State\Processor\BookRemoveProcessor;
@@ -192,9 +193,18 @@ class Book
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
     public ?int $rating = null;
 
-    #[ORM\Column]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read'])]
-    public ?bool $isPromoted = null;
+    /**
+     * @see https://schema.org/OfferItemCondition
+     */
+    #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
+    #[ApiProperty(
+        types: ['https://schema.org/BookPublishingStatus'],
+        example: BookPublishingStatus::None->value
+    )]
+    #[Assert\NotNull]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[ORM\Column(name: '`publishing_status`', type: 'string', enumType: BookPublishingStatus::class)]
+    public ?BookPublishingStatus $publishingStatus = null;
 
     public function __construct()
     {
@@ -204,17 +214,5 @@ class Book
     public function getId(): ?Uuid
     {
         return $this->id;
-    }
-
-    public function isPromoted(): ?bool
-    {
-        return $this->isPromoted;
-    }
-
-    public function setPromoted(bool $isPromoted): static
-    {
-        $this->isPromoted = $isPromoted;
-
-        return $this;
     }
 }
