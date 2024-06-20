@@ -194,7 +194,7 @@ class Book
     public ?int $rating = null;
 
     /**
-     * @see https://schema.org/OfferItemCondition
+     * @see https://schema.org/BookPublishingStatus
      */
     #[ApiFilter(SearchFilter::class, strategy: SearchFilterInterface::STRATEGY_EXACT)]
     #[ApiProperty(
@@ -205,6 +205,13 @@ class Book
     #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
     #[ORM\Column(name: '`publishing_status`', type: 'string', enumType: BookPublishingStatus::class)]
     public ?BookPublishingStatus $publishingStatus = null;
+
+    #[Assert\NotNull]
+    #[ApiFilter(OrderFilter::class)]
+    #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[ORM\Column(length: 500)]
+    public ?string $slug = null;
 
     public function __construct()
     {
