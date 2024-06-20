@@ -209,7 +209,8 @@ class Book
     #[Assert\NotNull]
     #[ApiFilter(OrderFilter::class)]
     #[ApiFilter(SearchFilter::class, strategy: 'i' . SearchFilterInterface::STRATEGY_PARTIAL)]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Book:write'])]
+    #[Assert\Regex(pattern: '/^[a-zA-Z\-\d]{5,}$/')]
     #[ORM\Column(length: 500)]
     public ?string $slug = null;
 
