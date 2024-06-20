@@ -202,7 +202,7 @@ class Book
         example: BookPublishingStatus::None->value
     )]
     #[Assert\NotNull]
-    #[Groups(groups: ['Book:read', 'Book:read:admin', 'Bookmark:read', 'Book:write'])]
+    #[Groups(groups: ['Book:read:admin', 'Book:write'])]
     #[ORM\Column(name: '`publishing_status`', type: 'string', enumType: BookPublishingStatus::class)]
     public ?BookPublishingStatus $publishingStatus = null;
 
